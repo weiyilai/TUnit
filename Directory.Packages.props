@@ -36,9 +36,9 @@
     <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="1.4.3" />
     <PackageVersion Include="Microsoft.Testing.Platform" Version="1.4.3" />
     <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.4.3" />
-    <PackageVersion Include="ModularPipelines.DotNet" Version="2.42.228" />
-    <PackageVersion Include="ModularPipelines.Git" Version="2.42.228" />
-    <PackageVersion Include="ModularPipelines.GitHub" Version="2.42.228" />
+    <PackageVersion Include="ModularPipelines.DotNet" Version="2.42.246" />
+    <PackageVersion Include="ModularPipelines.Git" Version="2.42.246" />
+    <PackageVersion Include="ModularPipelines.GitHub" Version="2.42.246" />
     <PackageVersion Include="MSTest.TestAdapter" Version="3.7.1" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.7.1" />
     <PackageVersion Include="NUnit" Version="4.3.2" />
@@ -47,8 +47,8 @@
     <PackageVersion Include="Polly" Version="8.5.1" />
     <PackageVersion Include="Polyfill" Version="7.12.0" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
-    <PackageVersion Include="Sourcy.DotNet" Version="0.0.66" />
-    <PackageVersion Include="Sourcy.Git" Version="0.0.66" />
+    <PackageVersion Include="Sourcy.DotNet" Version="0.0.79" />
+    <PackageVersion Include="Sourcy.Git" Version="0.0.79" />
     <PackageVersion Include="StreamJsonRpc" Version="2.20.20" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageVersion Include="System.Text.Json" Version="9.0.1" />
@@ -56,9 +56,9 @@
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.1.0" />
     <PackageVersion Include="trxparser" Version="0.5.0" />
     <PackageVersion Include="Verify.NUnit" Version="28.9.0" />
-    <PackageVersion Include="TUnit" Version="0.6.119" />
-    <PackageVersion Include="TUnit.Core" Version="0.6.119" />
-    <PackageVersion Include="TUnit.Assertions" Version="0.6.119" />
+    <PackageVersion Include="TUnit" Version="0.6.151" />
+    <PackageVersion Include="TUnit.Core" Version="0.6.151" />
+    <PackageVersion Include="TUnit.Assertions" Version="0.6.151" />
     <PackageVersion Include="Verify.TUnit" Version="28.9.0" />
     <PackageVersion Include="Vogen" Version="6.0.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
