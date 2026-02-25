@@ -188,7 +188,7 @@ internal static class MockImplBuilder
             }
         }
 
-        var argsArray = GetArgsArrayExpression(method);
+        var argsArray = EmitArgsArrayVariable(writer, method);
         var argPassList = GetArgPassList(method);
 
         if (method.IsVoid && !method.IsAsync)
@@ -461,7 +461,7 @@ internal static class MockImplBuilder
             }
         }
 
-        var argsArray = GetArgsArrayExpression(method);
+        var argsArray = EmitArgsArrayVariable(writer, method);
         var argPassList = GetArgPassList(method);
 
         if (method.IsVoid && !method.IsAsync)
@@ -551,7 +551,7 @@ internal static class MockImplBuilder
             }
         }
 
-        var argsArray = GetArgsArrayExpression(method);
+        var argsArray = EmitArgsArrayVariable(writer, method);
 
         var hasOutRef = HasOutRefParams(method);
 
@@ -955,14 +955,32 @@ internal static class MockImplBuilder
         }
     }
 
-    private static string GetArgsArrayExpression(MockMemberModel method)
+    private static string EmitArgsArrayVariable(CodeWriter writer, MockMemberModel method)
     {
-        // Only include non-out, non-ref-struct parameters in args array
-        // (ref structs cannot be boxed into object?[])
-        var matchableParams = method.Parameters.Where(p => p.Direction != ParameterDirection.Out && !p.IsRefStruct).ToList();
+        if (!method.HasRefStructParams)
+            return GetArgsArrayExpression(method, false);
+
+        writer.AppendLine("#if NET9_0_OR_GREATER");
+        writer.AppendLine($"var __args = {GetArgsArrayExpression(method, true)};");
+        writer.AppendLine("#else");
+        writer.AppendLine($"var __args = {GetArgsArrayExpression(method, false)};");
+        writer.AppendLine("#endif");
+        return "__args";
+    }
+
+    private static string GetArgsArrayExpression(MockMemberModel method, bool includeRefStructSentinels)
+    {
+        var nonOutParams = method.Parameters.Where(p => p.Direction != ParameterDirection.Out).ToList();
+        if (includeRefStructSentinels)
+        {
+            if (nonOutParams.Count == 0) return "global::System.Array.Empty<object?>()";
+            var args = string.Join(", ", nonOutParams.Select(p => p.IsRefStruct ? "null" : p.Name));
+            return $"new object?[] {{ {args} }}";
+        }
+        var matchableParams = nonOutParams.Where(p => !p.IsRefStruct).ToList();
         if (matchableParams.Count == 0) return "global::System.Array.Empty<object?>()";
-        var args = string.Join(", ", matchableParams.Select(p => p.Name));
-        return $"new object?[] {{ {args} }}";
+        var argsStr = string.Join(", ", matchableParams.Select(p => p.Name));
+        return $"new object?[] {{ {argsStr} }}";
     }
 
     /// <summary>
