@@ -88,7 +88,7 @@ public class ProtectedMemberTests
         mock.Object.ProcessAndFormat(7);
 
         // Assert — both ComputeValue (base call) and FormatResult are recorded
-        await Assert.That(mock.Invocations).Count().IsGreaterThanOrEqualTo(2);
+        await Assert.That(Mock.GetInvocations(mock)).Count().IsGreaterThanOrEqualTo(2);
     }
 
     [Test]
