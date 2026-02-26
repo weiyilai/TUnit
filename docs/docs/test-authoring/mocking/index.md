@@ -4,7 +4,9 @@ sidebar_position: 1
 
 # TUnit.Mocks
 
-TUnit.Mocks is a **source-generated, AOT-compatible** mocking framework built for TUnit. Because mocks are generated at compile time, it works with Native AOT, trimming, and single-file publishing — unlike traditional mocking libraries that rely on runtime proxy generation.
+TUnit.Mocks is a **standalone, source-generated, AOT-compatible** mocking framework. Because mocks are generated at compile time, it works with Native AOT, trimming, and single-file publishing — unlike traditional mocking libraries that rely on runtime proxy generation.
+
+While it integrates seamlessly with TUnit's assertion engine, TUnit.Mocks has **no dependency on the TUnit test framework** and works with any test runner — xUnit, NUnit, MSTest, or no framework at all.
 
 :::note Beta
 TUnit.Mocks is currently in **beta**. The API may change before the stable release.

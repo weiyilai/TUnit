@@ -16,7 +16,7 @@ mock.GetUser(42).WasCalled();
 mock.GetUser(42).WasCalled(Times.Once);
 
 // Verify never called
-mock.Delete(Any<int>()).WasNeverCalled();
+mock.Delete(Any()).WasNeverCalled();
 ```
 
 ### Times
@@ -35,7 +35,7 @@ mock.Delete(Any<int>()).WasNeverCalled();
 
 ```csharp
 mock.GetUser(42).WasCalled(Times.Once, "GetUser should be called once during initialization");
-mock.Delete(Any<int>()).WasNeverCalled("Delete should not be called in read-only mode");
+mock.Delete(Any()).WasNeverCalled("Delete should not be called in read-only mode");
 ```
 
 ## Property Verification
@@ -54,7 +54,7 @@ mock.Count.Setter.WasNeverCalled();
 
 // Setter verification — specific value
 mock.Count.Set(42).WasCalled(Times.Once);
-mock.Count.Set(Is<int>(v => v > 0)).WasCalled(Times.AtLeast(1));
+mock.Count.Set(v => v > 0).WasCalled(Times.AtLeast(1));
 ```
 
 ## Argument Matching in Verification
@@ -66,10 +66,10 @@ Verification uses the same `Arg<T>` matchers as setup:
 mock.GetUser(42).WasCalled(Times.Once);
 
 // Any value
-mock.GetUser(Any<int>()).WasCalled(Times.Exactly(3));
+mock.GetUser(Any()).WasCalled(Times.Exactly(3));
 
-// Predicate
-mock.GetUser(Is<int>(id => id > 0)).WasCalled(Times.AtLeast(1));
+// Predicate — inline lambda works directly
+mock.GetUser(id => id > 0).WasCalled(Times.AtLeast(1));
 ```
 
 See [Argument Matchers](argument-matchers) for the full list of matchers.
@@ -82,7 +82,7 @@ Verify calls occurred in a specific order **across one or more mocks**:
 Mock.VerifyInOrder(() =>
 {
     mockLogger.Log("Starting").WasCalled();
-    mockRepo.SaveAsync(Any<int>()).WasCalled();
+    mockRepo.SaveAsync(Any()).WasCalled();
     mockLogger.Log("Done").WasCalled();
 });
 ```
@@ -98,8 +98,8 @@ If calls occurred out of order, `VerifyInOrder` throws with a message showing th
 Verify that **every setup** was invoked at least once:
 
 ```csharp
-mock.GetUser(Any<int>()).Returns(new User("Alice"));
-mock.Delete(Any<int>());
+mock.GetUser(Any()).Returns(new User("Alice"));
+mock.Delete(Any());
 
 svc.GetUser(1);
 svc.Delete(2);
@@ -133,7 +133,7 @@ Use TUnit's `Assert.That` pipeline for assertion-style verification with better 
 using TUnit.Mocks.Assertions;
 
 await Assert.That(mock.GetUser(42)).WasCalled(Times.Once);
-await Assert.That(mock.Delete(Any<int>())).WasNeverCalled();
+await Assert.That(mock.Delete(Any())).WasNeverCalled();
 
 // Property verification through assertions
 await Assert.That(mock.Name).WasCalled(Times.Once);
