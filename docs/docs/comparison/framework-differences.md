@@ -1,6 +1,6 @@
 # Framework Differences
 
-TUnit is inspired by NUnit and xUnit, and first and foremost I want to say that these are amazing frameworks and no hate to them.
+TUnit is inspired by NUnit and xUnit, which are excellent frameworks that have served the .NET community well.
 
 **Why use TUnit?**
 TUnit aims to address some pain points and limitations found in other frameworks, especially around parallelism, lifecycle hooks, test isolation, and extensibility.
@@ -57,8 +57,7 @@ public class ValidatorTests
 
 The TUnit package automatically configures global usings for common TUnit namespaces, so you don't need to include using statements in your test files.
 
-So you'll be asking why use TUnit instead of them, right?
-Here are some things I've stumbled across in the past that I've found limiting when writing a test suite.
+The following sections describe specific limitations in other frameworks that TUnit addresses.
 
 ## xUnit
 
@@ -74,7 +73,7 @@ Set ups and tear-downs work largely off of constructors and the `IDisposable` in
 There isn't a simplistic way to do something on starting an assembly's tests. For example, we might want to spin up 1 in-memory server to run some tests against. TUnit supports this with a simple static class, with a method containing the attribute `[Before(Assembly)]`. Tear down is as simple as another method with `[After(Assembly)]`. 
 
 ### TestContext
-Sometimes we want to access information about the state of a test. For example, when running UI tests, I like to take a screenshot on a test failure, so I can more easily see what went wrong. xUnit does not have a native way of determining if a test failed when you're in a tear down method. With TUnit, you can inject in a `TestContext` object into your tear down method, or you can call the static `TestContext.Current` static method.
+Sometimes it is useful to access information about the state of a test. For example, when running UI tests, taking a screenshot on failure makes it easier to see what went wrong. xUnit does not have a native way of determining if a test failed when you're in a tear down method. With TUnit, you can inject in a `TestContext` object into your tear down method, or you can call the static `TestContext.Current` static method.
 
 ### Assertions
 xUnit assertions are fairly basic and have the problem of it being unclear which argument goes in which position, without sifting through intellisense/documentation.
@@ -88,12 +87,12 @@ Assert.Equal(one, 1)
 ## NUnit
 
 ### Shared test class instances
-This one has bitten me so many times, and I've seen it bite many others too. And a lot of people don't even know it. But the default behaviour of NUnit is to run all your tests within a class, against a single instance of that class. That means if you're storing state in fields/properties, they're going to be left over from previous tests.
-This is what I call leaky test states, and I am firmly against it. Tests should be isolated from one another and really unable to affect one another. So TUnit by design runs every test against a new instance, and there is no way to change that because I consider it bad practice. If you want to share state in a field, then that's entirely possible by making it `static`. By utilising the language instead, it makes it clear to anyone reading it whether multiple tests can access that.
+This is a common source of subtle bugs that many developers encounter without realizing it. The default behaviour of NUnit is to run all tests within a class against a single instance of that class. That means if state is stored in fields or properties, it persists from previous tests.
+This pattern — sometimes called leaky test state — undermines test isolation. Tests should be independent and unable to affect one another. TUnit avoids this by design: every test runs against a new instance, with no way to opt out. To share state across tests, use `static` fields. This makes shared state explicit and immediately visible to anyone reading the code.
 
 ### Setting properties based off of dynamically injected data
-I had a scenario in a multi-tenanted test suite where tests tests were repeated with different tenants injected in.
-Like this:
+Consider a multi-tenanted test suite where tests are repeated with different tenants injected in.
+For example:
 ```csharp
 [TestFixtureSource(typeof(Tenant), nameof(Tenant.AllTenants))]
 public class MyTests(Tenant tenant)
@@ -106,21 +105,21 @@ public class MyTests(Tenant tenant)
 }
 ```
 
-With this, I wanted to be able to filter by the tenant. So I tried using a custom attribute with `IApplyToTest` and setting a property based on the constructor argument. This didn't work. I think they're enumerated upon starting, and so you can't set this up beforehand. With TUnit, tests are enumerated and initialised via source-generation so this is all done up-front. So I could set a property in TUnit with an attribute with `ITestDiscoveryEvent`, set a property based constructor arguments, and then run `dotnet run --treenode-filter /*/*/*/*[Tenant=MyTenant]` 
+A natural next step is to filter by tenant. In NUnit, a custom attribute with `IApplyToTest` can set a property based on the constructor argument, but this does not work because tests are enumerated on start-up before the fixture source provides its values. In TUnit, tests are enumerated and initialised via source generation, so this is all done up-front. A property can be set with an attribute implementing `ITestDiscoveryEvent` based on constructor arguments, and then filtered with `dotnet run --treenode-filter /*/*/*/*[Tenant=MyTenant]`.
 
 ### Assembly & class level attributes
 Want to use the `[Repeat]` or `[Retry]` attributes on a class? Or even an assembly? You can't. They're only supported for test methods. With TUnit, most attributes are supported at Test, Class & Assembly levels. Test takes the highest priority, then class, then assembly. So you could set defaults with an assembly/class attribute, and then override it for certain tests by setting that same attribute on the test.
 
 ### Assertions
-NUnit assertions largely influenced the way that TUnit assertions work. However, NUnit assertions do not have compile time checks. I could check if a string is negative (`NUnitAssert.That("String", Is.Negative);`) or if a boolean throws an exception (`NUnitAssert.That(true, Throws.ArgumentException);`). These assertions don't make sense. There are analyzers to help catch these - But they will compile if these analyzers aren't run. TUnit assertions are built with the type system in mind (where possible!). Specific assertions are built via extensions to the relevant types, and not in a generic sense that could apply to anything. That means when you're using intellisense to see what methods you have available, you should only see assertions that are relevant for your type. This makes it harder to make mistakes, and decreases your feedback loop time.
+NUnit assertions largely influenced the way that TUnit assertions work. However, NUnit assertions do not have compile-time checks. Nothing prevents checking if a string is negative (`NUnitAssert.That("String", Is.Negative);`) or if a boolean throws an exception (`NUnitAssert.That(true, Throws.ArgumentException);`). These assertions do not make sense. There are analyzers to help catch these - But they will compile if these analyzers aren't run. TUnit assertions are built with the type system in mind (where possible!). Specific assertions are built via extensions to the relevant types, and not in a generic sense that could apply to anything. That means when you're using intellisense to see what methods you have available, you should only see assertions that are relevant for your type. This makes it harder to make mistakes, and decreases your feedback loop time.
 
 ## Other
 
-### Source generated + Native AOT Support + Single File Support
-As mentioned, TUnit is source generated. This should mean things are fast. And you can check out the generated code yourself! Because tests are source generated and not scanned via reflection, this means you can build your test projects using Native AOT or as a Single File application - Something that you can't current do with NUnit or xUnit.
+### Source Generated + Native AOT + Single File Support
+TUnit is source generated, so test discovery happens at compile time rather than through runtime reflection. You can inspect the generated code yourself. Because tests are source generated, you can build your test projects using Native AOT or as a Single File application — something that NUnit and xUnit do not currently support.
 
-### More lifecycle hooks
-TUnit has tried to make it easy to hook into a range of lifecycles.
+### More Lifecycle Hooks
+TUnit provides a wide range of lifecycle hook points.
 The attributes you can use on your hook methods are:
 - `[Before(Test)]` - Run before every test in the class it's defined in
 - `[After(Test)]` - Run after every test in the class it's defined in
@@ -140,13 +139,12 @@ The attributes you can use on your hook methods are:
 - `[BeforeEvery(Assembly)]` - Run before the first test in every assembly in the test run
 - `[AfterEvery(Assembly)]` - Run after the last test in every assembly in the test run
 
-And all those hooks allow injecting in a relevant `[HookType]Context` object - So you can interrogate it for information about the test run so far. Hopefully meeting the needs of most users!
+All hooks accept a relevant `[HookType]Context` object, giving you access to information about the current test run.
 
 
-### Test dependencies
-Got tests that require another test to execute first?
-In other frameworks it usually involves turning off parallelisation, then setting an `[Order]` attribute with 1, 2, 3, etc.
-In TUnit, you can use a `[DependsOn(...)]` attribute. That test will wait to start, only once its dependencies have finished. And you don't have to turn off parallelisation of other tests!
+### Test Dependencies
+In other frameworks, running tests in a specific order usually requires turning off parallelisation and setting an `[Order]` attribute with 1, 2, 3, etc.
+In TUnit, you can use a `[DependsOn(...)]` attribute. That test will wait to start until its dependencies have finished, without disabling parallelisation for other tests.
 
 ```csharp
     [Test]
@@ -171,4 +169,4 @@ In TUnit, you can use a `[DependsOn(...)]` attribute. That test will wait to sta
 ```
 
 ### Class Arguments
-A lot of the data injection mechanisms in xUnit/NUnit work for the method, or the class, and not vice-versa. With TUnit, you can use `[Arguments(...)]` or `[Matrix(...)]` or `[MethodDataSource(...)]` etc. for both classes and test methods, making it super flexible!
+Many data injection mechanisms in xUnit/NUnit work for either the method or the class, but not both. With TUnit, you can use `[Arguments(...)]`, `[Matrix(...)]`, `[MethodDataSource(...)]`, and other data attributes on both classes and test methods.

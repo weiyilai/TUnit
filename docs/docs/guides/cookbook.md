@@ -98,31 +98,12 @@ public class OrderServiceTests
 
 ### Testing a Minimal API Endpoint (Shared Server)
 
-For API tests, it's more efficient to share a single WebApplicationFactory across all tests:
+For API tests, share a single WebApplicationFactory across all tests. See [Best Practices -- Sharing Expensive Resources](best-practices.md#sharing-expensive-resources) for the shared `TestWebServer` pattern using `ClassDataSource` with `SharedType.PerTestSession`.
 
 ```csharp
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Json;
 using TUnit.Core;
-
-// Shared web server for all API tests
-public class TestWebServer : IAsyncInitializer, IAsyncDisposable
-{
-    public WebApplicationFactory<Program>? Factory { get; private set; }
-
-    public async Task InitializeAsync()
-    {
-        Factory = new WebApplicationFactory<Program>();
-        await Task.CompletedTask;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (Factory != null)
-            await Factory.DisposeAsync();
-    }
-}
 
 [ClassDataSource<TestWebServer>(Shared = SharedType.PerTestSession)]
 public class UserApiTests(TestWebServer server)
@@ -328,7 +309,7 @@ public class OrderServiceTUnitMocksTests
 - **AOT-compatible** — source-generated mocks work with Native AOT, trimming, and single-file publishing
 - **Built-in capture** — every `Arg<T>` automatically captures values for inspection via `.Values` and `.Latest`
 
-See the full [TUnit.Mocks documentation](../test-authoring/mocking) for setup, verification, argument matchers, and more.
+See the full [TUnit.Mocks documentation](../writing-tests/mocking) for setup, verification, argument matchers, and more.
 :::
 
 ### Partial Mocks and Spy Pattern
@@ -793,4 +774,4 @@ These cookbook recipes cover the most common testing scenarios. You can adapt th
 - **Exception Testing**: Use TUnit's fluent exception assertions
 - **Integration Tests**: Test with real databases, containers, or file systems
 
-For more examples, check out the [examples section](../examples/intro) in the documentation.
+For more examples, check out the [ASP.NET Core](../examples/aspnet) and [Aspire](../examples/aspire) integration guides.
