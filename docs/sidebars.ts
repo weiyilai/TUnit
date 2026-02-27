@@ -75,20 +75,6 @@ const sidebars: SidebarsConfig = {
             'writing-tests/culture',
           ],
         },
-        {
-          type: 'category',
-          label: 'Mocking',
-          collapsed: true,
-          items: [
-            'writing-tests/mocking/index',
-            'writing-tests/mocking/setup',
-            'writing-tests/mocking/verification',
-            'writing-tests/mocking/argument-matchers',
-            'writing-tests/mocking/advanced',
-            'writing-tests/mocking/http',
-            'writing-tests/mocking/logging',
-          ],
-        },
       ],
     },
     {
@@ -149,6 +135,20 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'assertions/library',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Mocking',
+      collapsed: true,
+      items: [
+        'writing-tests/mocking/index',
+        'writing-tests/mocking/setup',
+        'writing-tests/mocking/verification',
+        'writing-tests/mocking/argument-matchers',
+        'writing-tests/mocking/advanced',
+        'writing-tests/mocking/http',
+        'writing-tests/mocking/logging',
       ],
     },
     {
