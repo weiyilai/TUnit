@@ -16,10 +16,11 @@ A .NET testing framework built on [Microsoft.Testing.Platform](https://learn.mic
 
 ## Features
 
-- **Compile-time test discovery** — tests are generated at build time rather than discovered via reflection at runtime, which means faster startup
+- **Compile-time test discovery** — tests are generated at build time rather than discovered via reflection at runtime, which means faster startup and better IDE integration
 - **Parallel by default** — tests run concurrently; use `[DependsOn]` to express ordering and `[ParallelLimiter]` to cap concurrency
 - **Data-driven testing** — `[Arguments]`, `[Matrix]`, `[ClassData]`, and custom `DataSourceGenerator<T>` sources
 - **Fluent async assertions** with detailed failure messages
+- **Built-in Roslyn analyzers** — catch mistakes at compile time, such as missing `async`, incorrect hook signatures, and invalid attribute combinations
 - **Extensible** — write custom skip conditions, retry logic, and attributes without touching the framework itself
 - **Native AOT & trimming support**
 - **Dependency injection** with lifecycle hooks (`[Before]` / `[After]` at method, class, assembly, or test session scope)
@@ -34,10 +35,10 @@ dotnet new TUnit -n "MyTestProject"
 
 ### Manual Installation
 ```bash
-dotnet add package TUnit --prerelease
+dotnet add package TUnit
 ```
 
-📖 [Documentation](https://tunit.dev) · [Getting Started Guide](https://tunit.dev/docs/getting-started/installation) · [Migration Guides](https://tunit.dev/docs/migration/xunit)
+📖 [Getting Started Guide](https://tunit.dev/docs/getting-started/installation) · [Migration Guides](https://tunit.dev/docs/migration/xunit)
 
 ## Examples
 
@@ -45,16 +46,12 @@ dotnet add package TUnit --prerelease
 
 ```csharp
 [Test]
-public async Task User_Creation_Should_Set_Timestamp()
+public async Task Parsing_A_Valid_Date_Succeeds()
 {
-    var user = await userService.CreateUserAsync("john.doe@example.com");
+    var date = DateTime.Parse("2025-01-01");
 
-    await Assert.That(user.CreatedAt)
-        .IsEqualTo(DateTime.Now)
-        .Within(TimeSpan.FromMinutes(1));
-
-    await Assert.That(user.Email)
-        .IsEqualTo("john.doe@example.com");
+    await Assert.That(date.Year).IsEqualTo(2025);
+    await Assert.That(date.Month).IsEqualTo(1);
 }
 ```
 
@@ -156,7 +153,7 @@ public async Task Windows_Specific_Feature() { ... }
 
 ## Migrating from xUnit, NUnit, or MSTest?
 
-The syntax will feel familiar. See the [Migration Guides](https://tunit.dev/docs/migration/xunit) for step-by-step instructions.
+The syntax will feel familiar. For example, xUnit's `[Fact]` becomes `[Test]`, and `[Theory]` + `[InlineData]` becomes `[Test]` + `[Arguments]`. See the [Migration Guides](https://tunit.dev/docs/migration/xunit) for full details.
 
 ## Community
 
@@ -165,6 +162,8 @@ The syntax will feel familiar. See the [Migration Guides](https://tunit.dev/docs
 - [Issues](https://github.com/thomhurst/TUnit/issues) — bug reports and feature requests
 - [Changelog](https://github.com/thomhurst/TUnit/releases)
 
-## Performance Benchmark
+## Performance Benchmarks
+
+The following benchmarks compare TUnit against NUnit, MSTest, and xUnit 3 across a range of scenarios, running on .NET 10.
 
 ${{ BENCHMARK }}
