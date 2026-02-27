@@ -194,7 +194,6 @@ const sidebars: SidebarsConfig = {
         'extending/display-names',
         'extending/logging',
         'extending/exception-handling',
-        'extending/test-variants',
         'extending/dynamic-tests',
         'extending/built-in-extensions',
         'extending/code-coverage',
