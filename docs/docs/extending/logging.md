@@ -43,11 +43,6 @@ TUnit automatically registers these sinks based on your execution context:
 |------|-----------------|---------|
 | **TestOutputSink** | Always | Captures output for test results shown after execution |
 | **ConsoleOutputSink** | `--output Detailed` | Writes real-time output to the console |
-| **RealTimeOutputSink** | IDE clients + `TUNIT_ENABLE_IDE_STREAMING=1` | Streams output to IDE test explorers |
-
-:::note
-The RealTimeOutputSink (IDE streaming) is disabled by default due to compatibility issues with the Microsoft Testing Platform that can cause crashes in some IDEs. Set the `TUNIT_ENABLE_IDE_STREAMING=1` environment variable to opt in. See [Environment Variables](/docs/reference/environment-variables) for details.
-:::
 
 ### Creating Custom Log Sinks
 
@@ -103,12 +98,12 @@ public class FileLogSink : ILogSink, IAsyncDisposable
 
 ### Registering Custom Sinks
 
-Register your sink in a `[Before(Assembly)]` hook so it's active before any tests run:
+Register your sink in a `[Before(TestDiscovery)]` hook so it's active before any tests are discovered or run:
 
 ```csharp
 public class TestSetup
 {
-    [Before(Assembly)]
+    [Before(TestDiscovery)]
     public static void SetupLogging()
     {
         // Register by instance (for sinks needing configuration)
@@ -207,11 +202,17 @@ public class SeqLogSink : ILogSink, IDisposable
 
 ## Microsoft.Extensions.Logging Integration
 
-If your application uses `Microsoft.Extensions.Logging.ILogger`, TUnit can capture that output and route it to the correct test.
+TUnit core has no dependency on `Microsoft.Extensions.Logging`. If your application uses `ILogger`, install `TUnit.AspNetCore` or `TUnit.Logging.Microsoft` to bridge the two.
 
 ### ASP.NET Core
 
-When using `TUnit.AspNetCore` with `TestWebApplicationFactory`, logging is fully automatic. See the [ASP.NET Core Integration Testing](/docs/examples/aspnet#tunit-logging-integration) docs for details.
+Install the `TUnit.AspNetCore` package:
+
+```bash
+dotnet add package TUnit.AspNetCore
+```
+
+When using `TestWebApplicationFactory`, logging is fully automatic. See the [ASP.NET Core Integration Testing](/docs/examples/aspnet#tunit-logging-integration) docs for details.
 
 ### Standalone (No ASP.NET Core)
 
