@@ -1,8 +1,8 @@
 ![](assets/banner.png)
 
-# 🚀 The Modern Testing Framework for .NET
+# TUnit
 
-**TUnit** is a modern testing framework for .NET that uses **source-generated tests**, **parallel execution by default**, and **Native AOT support**. Built on Microsoft.Testing.Platform, it's faster than traditional reflection-based frameworks and gives you more control over how your tests run.
+A .NET testing framework built on [Microsoft.Testing.Platform](https://learn.microsoft.com/en-us/testing-platform/), with source-generated tests, parallel execution by default, and Native AOT support.
 
 <div align="center">
 
@@ -14,41 +14,17 @@
 
 </div>
 
-## Why TUnit?
+## Features
 
-| Feature | Traditional Frameworks | **TUnit** |
-|---------|----------------------|-----------|
-| Test Discovery | ❌ Runtime reflection | ✅ **Compile-time generation** |
-| Execution Speed | ❌ Sequential by default | ✅ **Parallel by default** |
-| Modern .NET | ⚠️ Limited AOT support | ✅ **Native AOT & trimming** |
-| Test Dependencies | ❌ Not supported | ✅ **`[DependsOn]` chains** |
-| Resource Management | ❌ Manual lifecycle | ✅ **Automatic cleanup** |
+- **Compile-time test discovery** — tests are generated at build time rather than discovered via reflection at runtime, which means faster startup and better IDE integration
+- **Parallel by default** — tests run concurrently; use `[DependsOn]` to express ordering and `[ParallelLimiter]` to cap concurrency
+- **Data-driven testing** — `[Arguments]`, `[Matrix]`, `[ClassData]`, and custom `DataSourceGenerator<T>` sources
+- **Fluent async assertions** with detailed failure messages
+- **Extensible** — write custom skip conditions, retry logic, and attributes without touching the framework itself
+- **Native AOT & trimming support**
+- **Dependency injection** with lifecycle hooks (`[Before]` / `[After]` at method, class, assembly, or test session scope)
 
-**Parallel by Default** - Tests run concurrently with dependency management
-
-**Compile-Time Discovery** - Test structure is known before runtime
-
-**Modern .NET Ready** - Native AOT, trimming, and latest .NET features
-
-**Extensible** - Customize data sources, attributes, and test behavior
-
----
-
-<div align="center">
-
-## **[Documentation](https://tunit.dev)**
-
-**New to TUnit?** Start with the **[Getting Started Guide](https://tunit.dev/docs/getting-started/installation)**
-
-**Migrating?** See the **[Migration Guides](https://tunit.dev/docs/migration/xunit)**
-
-**Learn more:** **[Data-Driven Testing](https://tunit.dev/docs/writing-tests/arguments)**, **[Test Dependencies](https://tunit.dev/docs/writing-tests/ordering)**, **[Parallelism Control](https://tunit.dev/docs/execution/parallelism)**
-
-</div>
-
----
-
-## Quick Start
+## Getting Started
 
 ### Using the Project Template (Recommended)
 ```bash
@@ -61,66 +37,18 @@ dotnet new TUnit -n "MyTestProject"
 dotnet add package TUnit --prerelease
 ```
 
-📖 **[Complete Documentation & Guides](https://tunit.dev)**
+📖 [Documentation](https://tunit.dev) · [Getting Started Guide](https://tunit.dev/docs/getting-started/installation) · [Migration Guides](https://tunit.dev/docs/migration/xunit)
 
-## Key Features
+## Examples
 
-<table>
-<tr>
-<td width="50%">
-
-**Performance**
-- Source-generated tests (no reflection)
-- Parallel execution by default
-- Native AOT & trimming support
-- Optimized for speed
-
-</td>
-<td width="50%">
-
-**Test Control**
-- Test dependencies with `[DependsOn]`
-- Parallel limits & custom scheduling
-- Built-in analyzers & compile-time checks
-- Custom attributes & extensible conditions
-
-</td>
-</tr>
-<tr>
-<td>
-
-**Data & Assertions**
-- Multiple data sources (`[Arguments]`, `[Matrix]`, `[ClassData]`)
-- Fluent async assertions
-- Retry logic & conditional execution
-- Test metadata & context
-
-</td>
-<td>
-
-**Developer Tools**
-- Full dependency injection support
-- Lifecycle hooks
-- IDE integration (VS, Rider, VS Code)
-- Documentation & examples
-
-</td>
-</tr>
-</table>
-
-## Simple Test Example
+### Basic test with assertions
 
 ```csharp
 [Test]
 public async Task User_Creation_Should_Set_Timestamp()
 {
-    // Arrange
-    var userService = new UserService();
-
-    // Act
     var user = await userService.CreateUserAsync("john.doe@example.com");
 
-    // Assert - TUnit's fluent assertions
     await Assert.That(user.CreatedAt)
         .IsEqualTo(DateTime.Now)
         .Within(TimeSpan.FromMinutes(1));
@@ -130,7 +58,7 @@ public async Task User_Creation_Should_Set_Timestamp()
 }
 ```
 
-## Data-Driven Testing
+### Data-driven tests
 
 ```csharp
 [Test]
@@ -143,7 +71,7 @@ public async Task User_Login_Should_Succeed(string email, string password)
     await Assert.That(result.IsSuccess).IsTrue();
 }
 
-// Matrix testing - tests all combinations
+// Matrix — generates a test for every combination (9 total here)
 [Test]
 [MatrixDataSource]
 public async Task Database_Operations_Work(
@@ -155,7 +83,7 @@ public async Task Database_Operations_Work(
 }
 ```
 
-## Advanced Test Orchestration
+### Test dependencies and ordering
 
 ```csharp
 [Before(Class)]
@@ -164,57 +92,34 @@ public static async Task SetupDatabase(ClassHookContext context)
     await DatabaseHelper.InitializeAsync();
 }
 
-[Test, DisplayName("Register a new account")]
+[Test]
 [MethodDataSource(nameof(GetTestUsers))]
-public async Task Register_User(string username, string password)
-{
-    // Test implementation
-}
+public async Task Register_User(string username, string password) { ... }
 
 [Test, DependsOn(nameof(Register_User))]
-[Retry(3)] // Retry on failure
+[Retry(3)]
 public async Task Login_With_Registered_User(string username, string password)
 {
-    // This test runs after Register_User completes
-}
-
-[Test]
-[ParallelLimiter<LoadTestParallelLimit>] // Custom parallel control
-[Repeat(100)] // Run 100 times
-public async Task Load_Test_Homepage()
-{
-    // Performance testing
-}
-
-// Custom attributes
-[Test, WindowsOnly, RetryOnHttpError(5)]
-public async Task Windows_Specific_Feature()
-{
-    // Platform-specific test with custom retry logic
-}
-
-public class LoadTestParallelLimit : IParallelLimit
-{
-    public int Limit => 10; // Limit to 10 concurrent executions
+    // Guaranteed to run after Register_User passes
 }
 ```
 
-## Custom Test Control
+### Custom attributes
+
+TUnit lets you build your own skip conditions and retry logic by extending built-in base classes:
 
 ```csharp
-// Custom conditional execution
 public class WindowsOnlyAttribute : SkipAttribute
 {
-    public WindowsOnlyAttribute() : base("Windows only test") { }
+    public WindowsOnlyAttribute() : base("Windows only") { }
 
     public override Task<bool> ShouldSkip(TestContext testContext)
         => Task.FromResult(!OperatingSystem.IsWindows());
 }
 
-// Custom retry logic
-public class RetryOnHttpErrorAttribute : RetryAttribute
+public class RetryOnServiceUnavailableAttribute : RetryAttribute
 {
-    public RetryOnHttpErrorAttribute(int times) : base(times) { }
+    public RetryOnServiceUnavailableAttribute(int times) : base(times) { }
 
     public override Task<bool> ShouldRetry(TestInformation testInformation,
         Exception exception, int currentRetryCount)
@@ -222,149 +127,43 @@ public class RetryOnHttpErrorAttribute : RetryAttribute
 }
 ```
 
-## Common Use Cases
+Then use them like any other attribute:
 
-<table>
-<tr>
-<td width="33%">
-
-### **Unit Testing**
 ```csharp
-[Test]
-[Arguments(1, 2, 3)]
-[Arguments(5, 10, 15)]
-public async Task Calculate_Sum(int a, int b, int expected)
-{
-    await Assert.That(Calculator.Add(a, b))
-        .IsEqualTo(expected);
-}
+[Test, WindowsOnly, RetryOnServiceUnavailable(5)]
+public async Task Windows_Specific_Feature() { ... }
 ```
-
-</td>
-<td width="33%">
-
-### **Integration Testing**
-```csharp
-[Test, DependsOn(nameof(CreateUser))]
-public async Task Login_After_Registration()
-{
-    // Runs after CreateUser completes
-    var result = await authService.Login(user);
-    await Assert.That(result.IsSuccess).IsTrue();
-}
-```
-
-</td>
-<td width="33%">
-
-### **Load Testing**
-```csharp
-[Test]
-[ParallelLimiter<LoadTestLimit>]
-[Repeat(1000)]
-public async Task API_Handles_Concurrent_Requests()
-{
-    await Assert.That(await httpClient.GetAsync("/api/health"))
-        .HasStatusCode(HttpStatusCode.OK);
-}
-```
-
-</td>
-</tr>
-</table>
-
-## What Makes TUnit Different?
-
-### **Compile-Time Test Discovery**
-Tests are discovered at build time, not runtime. This means faster discovery, better IDE integration, and more predictable resource management.
-
-### **Parallel by Default**
-Tests run in parallel by default. Use `[DependsOn]` to chain tests together, and `[ParallelLimiter]` to control resource usage.
-
-### **Extensible**
-The `DataSourceGenerator<T>` pattern and custom attribute system let you extend TUnit without modifying the framework.
-
-## Community & Ecosystem
-
-<div align="center">
-
-[![Downloads](https://img.shields.io/nuget/dt/TUnit?label=Downloads&color=blue)](https://www.nuget.org/packages/TUnit/)
-[![Contributors](https://img.shields.io/github/contributors/thomhurst/TUnit?label=Contributors)](https://github.com/thomhurst/TUnit/graphs/contributors)
-[![Discussions](https://img.shields.io/github/discussions/thomhurst/TUnit?label=Discussions)](https://github.com/thomhurst/TUnit/discussions)
-
-</div>
-
-### **Resources**
-- **[Official Documentation](https://tunit.dev)** - Guides, tutorials, and API reference
-- **[GitHub Discussions](https://github.com/thomhurst/TUnit/discussions)** - Get help and share ideas
-- **[Issue Tracking](https://github.com/thomhurst/TUnit/issues)** - Report bugs and request features
-- **[Release Notes](https://github.com/thomhurst/TUnit/releases)** - Latest updates and changes
 
 ## IDE Support
 
-TUnit works with all major .NET IDEs:
+| IDE | Notes |
+|-----|-------|
+| **Visual Studio 2022 (17.13+)** | Works out of the box |
+| **Visual Studio 2022 (earlier)** | Enable "Use testing platform server mode" in Tools > Manage Preview Features |
+| **JetBrains Rider** | Enable "Testing Platform support" in Settings > Build, Execution, Deployment > Unit Testing > Testing Platform |
+| **VS Code** | Install [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) and enable "Use Testing Platform Protocol" |
+| **CLI** | Works with `dotnet test`, `dotnet run`, and direct execution |
 
-### Visual Studio (2022 17.13+)
-✅ **Fully supported** - No additional configuration needed for latest versions
+## Packages
 
-⚙️ **Earlier versions**: Enable "Use testing platform server mode" in Tools > Manage Preview Features
+| Package | Purpose |
+|---------|---------|
+| `TUnit` | Start here — the full framework (Core + Engine + Assertions) |
+| `TUnit.Core` | Shared test library components without an execution engine |
+| `TUnit.Engine` | Execution engine for test projects |
+| `TUnit.Assertions` | Standalone assertions — works with other test frameworks too |
+| `TUnit.Playwright` | Playwright integration with automatic browser lifecycle management |
 
-### JetBrains Rider
-✅ **Fully supported**
+## Migrating from xUnit, NUnit, or MSTest?
 
-⚙️ **Setup**: Enable "Testing Platform support" in Settings > Build, Execution, Deployment > Unit Testing > Testing Platform
+The syntax will feel familiar. See the [Migration Guides](https://tunit.dev/docs/migration/xunit) for step-by-step instructions.
 
-### Visual Studio Code
-✅ **Fully supported**
+## Community
 
-⚙️ **Setup**: Install [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) and enable "Use Testing Platform Protocol"
-
-### Command Line
-✅ **Full CLI support** - Works with `dotnet test`, `dotnet run`, and direct executable execution
-
-## Package Options
-
-| Package | Use Case |
-|---------|----------|
-| **`TUnit`** | **Start here** - Complete testing framework (includes Core + Engine + Assertions) |
-| **`TUnit.Core`** | Test libraries and shared components (no execution engine) |
-| **`TUnit.Engine`** | Test execution engine and adapter (for test projects) |
-| **`TUnit.Assertions`** | Standalone assertions (works with any test framework) |
-| **`TUnit.Playwright`** | Playwright integration with automatic lifecycle management |
-
-## Migration from Other Frameworks
-
-**Coming from NUnit or xUnit?** TUnit uses familiar syntax with some additions:
-
-```csharp
-// TUnit test with dependency management and retries
-[Test]
-[Arguments("value1")]
-[Arguments("value2")]
-[Retry(3)]
-[ParallelLimiter<CustomLimit>]
-public async Task Modern_TUnit_Test(string value) { }
-```
-
-📖 **Need help migrating?** Check our **[Migration Guides](https://tunit.dev/docs/migration/xunit)** for xUnit, NUnit, and MSTest.
-
----
-
-<div align="center">
-
-## Getting Started
-
-```bash
-# Create a new test project
-dotnet new install TUnit.Templates && dotnet new TUnit -n "MyTestProject"
-
-# Or add to existing project
-dotnet add package TUnit --prerelease
-```
-
-**Learn More**: [tunit.dev](https://tunit.dev) | **Get Help**: [GitHub Discussions](https://github.com/thomhurst/TUnit/discussions) | **Star on GitHub**: [github.com/thomhurst/TUnit](https://github.com/thomhurst/TUnit)
-
-</div>
+- [Documentation](https://tunit.dev) — guides, tutorials, and API reference
+- [GitHub Discussions](https://github.com/thomhurst/TUnit/discussions) — questions and ideas welcome
+- [Issues](https://github.com/thomhurst/TUnit/issues) — bug reports and feature requests
+- [Changelog](https://github.com/thomhurst/TUnit/releases)
 
 ## Performance Benchmark
 
