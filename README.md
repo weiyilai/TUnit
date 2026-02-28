@@ -2,7 +2,7 @@
 
 # TUnit
 
-A .NET testing framework built on [Microsoft.Testing.Platform](https://learn.microsoft.com/en-us/dotnet/core/testing/microsoft-testing-platform-intro), with source-generated tests, parallel execution by default, and Native AOT support.
+A modern .NET testing framework. Tests are source-generated at compile time, run in parallel by default, and support Native AOT — all built on [Microsoft.Testing.Platform](https://learn.microsoft.com/en-us/dotnet/core/testing/microsoft-testing-platform-intro).
 
 <div align="center">
 
@@ -19,11 +19,11 @@ A .NET testing framework built on [Microsoft.Testing.Platform](https://learn.mic
 - **Compile-time test discovery** — tests are generated at build time rather than discovered via reflection at runtime, which means faster startup and better IDE integration
 - **Parallel by default** — tests run concurrently; use `[DependsOn]` to express ordering and `[ParallelLimiter]` to cap concurrency
 - **Data-driven testing** — `[Arguments]`, `[Matrix]`, `[ClassData]`, and custom `DataSourceGenerator<T>` sources
-- **Fluent async assertions** with detailed failure messages
+- **Async assertions** with detailed failure messages
 - **Built-in Roslyn analyzers** — catch mistakes at compile time, such as missing `async`, incorrect hook signatures, and invalid attribute combinations
-- **Extensible** — write custom skip conditions, retry logic, and attributes without touching the framework itself
+- **Extensible** — write your own skip conditions, retry logic, and attributes
 - **Native AOT & trimming support**
-- **Dependency injection** with lifecycle hooks (`[Before]` / `[After]` at method, class, assembly, or test session scope)
+- **Lifecycle hooks** — `[Before]` / `[After]` at method, class, assembly, or test session scope
 
 ## Getting Started
 
