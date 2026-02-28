@@ -9,7 +9,7 @@ A modern .NET testing framework. Tests are source-generated at compile time, run
 [![thomhurst%2FTUnit | Trendshift](https://trendshift.io/api/badge/repositories/11781)](https://trendshift.io/repositories/11781)
 
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a8231644d844435eb9fd15110ea771d8)](https://app.codacy.com/gh/thomhurst/TUnit?utm_source=github.com&utm_medium=referral&utm_content=thomhurst/TUnit&utm_campaign=Badge_Grade)![GitHub Repo stars](https://img.shields.io/github/stars/thomhurst/TUnit) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed-raw/thomhurst/TUnit)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a8231644d844435eb9fd15110ea771d8)](https://app.codacy.com/gh/thomhurst/TUnit?utm_source=github.com&utm_medium=referral&utm_content=thomhurst/TUnit&utm_campaign=Badge_Grade) ![GitHub Repo stars](https://img.shields.io/github/stars/thomhurst/TUnit) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed-raw/thomhurst/TUnit)
  [![GitHub Sponsors](https://img.shields.io/github/sponsors/thomhurst)](https://github.com/sponsors/thomhurst) [![nuget](https://img.shields.io/nuget/v/TUnit.svg)](https://www.nuget.org/packages/TUnit/) [![NuGet Downloads](https://img.shields.io/nuget/dt/TUnit)](https://www.nuget.org/packages/TUnit/) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/thomhurst/TUnit/dotnet.yml) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/thomhurst/TUnit/main) ![License](https://img.shields.io/github/license/thomhurst/TUnit)
 
 </div>
@@ -31,6 +31,8 @@ A modern .NET testing framework. Tests are source-generated at compile time, run
 ```bash
 dotnet new install TUnit.Templates
 dotnet new TUnit -n "MyTestProject"
+cd MyTestProject
+dotnet run
 ```
 
 ### Manual Installation
@@ -103,7 +105,7 @@ public async Task Login_With_Registered_User(string username, string password)
 
 ### Custom attributes
 
-TUnit lets you build your own skip conditions and retry logic by extending built-in base classes:
+Extend built-in base classes to create your own skip conditions, retry logic, and more:
 
 ```csharp
 public class WindowsOnlyAttribute : SkipAttribute
@@ -114,22 +116,11 @@ public class WindowsOnlyAttribute : SkipAttribute
         => Task.FromResult(!OperatingSystem.IsWindows());
 }
 
-public class RetryOnServiceUnavailableAttribute : RetryAttribute
-{
-    public RetryOnServiceUnavailableAttribute(int times) : base(times) { }
-
-    public override Task<bool> ShouldRetry(TestInformation testInformation,
-        Exception exception, int currentRetryCount)
-        => Task.FromResult(exception is HttpRequestException { StatusCode: HttpStatusCode.ServiceUnavailable });
-}
-```
-
-Then use them like any other attribute:
-
-```csharp
-[Test, WindowsOnly, RetryOnServiceUnavailable(5)]
+[Test, WindowsOnly]
 public async Task Windows_Specific_Feature() { ... }
 ```
+
+See the [documentation](https://tunit.dev/docs/getting-started/attributes) for more examples, including custom retry logic and data sources.
 
 ## IDE Support
 
