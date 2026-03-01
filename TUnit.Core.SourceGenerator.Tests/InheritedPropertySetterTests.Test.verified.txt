@@ -21,7 +21,7 @@ internal sealed class TUnit_TestProject_PropertySetterTests_Test_TestSource : gl
     [global::System.Runtime.CompilerServices.UnsafeAccessor(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Field, Name = "<Property7>k__BackingField")]
     private static extern ref string GetProperty7BackingField(global::TUnit.TestProject.PropertySetterTests instance);
     #endif
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.PropertySetterTests>
         {
@@ -312,7 +312,7 @@ internal sealed class TUnit_TestProject_PropertySetterTests_Test_TestSource : gl
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.PropertySetterTests()
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.PropertySetterTests()
             {
                 Property1 = default!,
                 Property2 = default!,
@@ -335,8 +335,7 @@ internal sealed class TUnit_TestProject_PropertySetterTests_Test_TestSource : gl
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -353,7 +352,7 @@ internal sealed class TUnit_TestProject_PropertySetterTests_Test_TestSource : gl
             HasDataSource = false,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
@@ -392,7 +391,7 @@ internal sealed class TUnit_TestProject_InheritedPropertySetterTests_Test_TestSo
     [global::System.Runtime.CompilerServices.UnsafeAccessor(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Field, Name = "<Property7>k__BackingField")]
     private static extern ref string GetProperty7BackingField(global::TUnit.TestProject.PropertySetterTests instance);
     #endif
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.InheritedPropertySetterTests>
         {
@@ -578,7 +577,7 @@ internal sealed class TUnit_TestProject_InheritedPropertySetterTests_Test_TestSo
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.InheritedPropertySetterTests()
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.InheritedPropertySetterTests()
             {
                 Property1 = default!,
                 Property2 = default!,
@@ -601,8 +600,7 @@ internal sealed class TUnit_TestProject_InheritedPropertySetterTests_Test_TestSo
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -619,7 +617,7 @@ internal sealed class TUnit_TestProject_InheritedPropertySetterTests_Test_TestSo
             HasDataSource = false,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }

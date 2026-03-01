@@ -7,7 +7,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMethodDataSource_SingleValue__int_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests>
         {
@@ -85,7 +85,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
             InvokeTypedTest = static (instance, args, cancellationToken) =>
             {
                 try
@@ -107,8 +107,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -125,7 +124,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
@@ -150,7 +149,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMethodDataSource_Tuples__int_string_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests>
         {
@@ -235,7 +234,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
             InvokeTypedTest = static (instance, args, cancellationToken) =>
             {
                 try
@@ -257,8 +256,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -275,7 +273,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
@@ -300,7 +298,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMethodDataSource_Enumerable__int_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests>
         {
@@ -378,7 +376,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
             InvokeTypedTest = static (instance, args, cancellationToken) =>
             {
                 try
@@ -400,8 +398,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -418,7 +415,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
@@ -443,7 +440,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMethodDataSource_Func__int_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests>
         {
@@ -521,7 +518,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
             InvokeTypedTest = static (instance, args, cancellationToken) =>
             {
                 try
@@ -543,8 +540,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -561,7 +557,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
@@ -586,7 +582,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMethodDataSource_WithArguments__int_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests>
         {
@@ -664,7 +660,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
             InvokeTypedTest = static (instance, args, cancellationToken) =>
             {
                 try
@@ -686,8 +682,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -704,7 +699,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
@@ -729,7 +724,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMethodDataSource_ExternalClass__string_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests>
         {
@@ -807,7 +802,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
             InvokeTypedTest = static (instance, args, cancellationToken) =>
             {
                 try
@@ -829,8 +824,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -847,7 +841,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_AsyncMe
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
@@ -872,7 +866,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_ValueTaskMethodDataSource_SingleValue__int_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests>
         {
@@ -950,7 +944,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_ValueTa
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
+            InstanceFactory = static (typeArgs, args) => new global::TUnit.TestProject.AsyncMethodDataSourceDrivenTests(),
             InvokeTypedTest = static (instance, args, cancellationToken) =>
             {
                 try
@@ -972,8 +966,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_ValueTa
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -990,7 +983,7 @@ internal sealed class TUnit_TestProject_AsyncMethodDataSourceDrivenTests_ValueTa
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }

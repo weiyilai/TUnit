@@ -7,7 +7,7 @@ namespace TUnit.Generated;
 [global::System.CodeDom.Compiler.GeneratedCode("TUnit", "1.0.0.0")]
 internal sealed class TUnit_TestProject_DataSourceClassCombinedWithDataSourceMethod_DataSourceClassCombinedW_3C180E22_TestSource : global::TUnit.Core.Interfaces.SourceGenerator.ITestSource, global::TUnit.Core.Interfaces.SourceGenerator.ITestDescriptorSource
 {
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.DataSourceClassCombinedWithDataSourceMethod>
         {
@@ -149,7 +149,7 @@ internal sealed class TUnit_TestProject_DataSourceClassCombinedWithDataSourceMet
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) =>
+            InstanceFactory = static (typeArgs, args) =>
             {
                 return new global::TUnit.TestProject.DataSourceClassCombinedWithDataSourceMethod(global::TUnit.Core.Helpers.CastHelper.Cast<int>(args[0]));
             },
@@ -175,8 +175,7 @@ internal sealed class TUnit_TestProject_DataSourceClassCombinedWithDataSourceMet
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -193,7 +192,7 @@ internal sealed class TUnit_TestProject_DataSourceClassCombinedWithDataSourceMet
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }

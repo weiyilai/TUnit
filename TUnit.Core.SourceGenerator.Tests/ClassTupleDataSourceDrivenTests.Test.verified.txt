@@ -17,7 +17,7 @@ internal sealed class TUnit_TestProject_ClassTupleDataSourceDrivenTests_DataSour
     [global::System.Runtime.CompilerServices.UnsafeAccessor(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Field, Name = "<Property4>k__BackingField")]
     private static extern ref global::System.ValueTuple<int, string, bool> GetProperty4BackingField(global::TUnit.TestProject.ClassTupleDataSourceDrivenTests instance);
     #endif
-    public async global::System.Collections.Generic.IAsyncEnumerable<global::TUnit.Core.TestMetadata> GetTestsAsync(string testSessionId, [global::System.Runtime.CompilerServices.EnumeratorCancellation] global::System.Threading.CancellationToken cancellationToken = default)
+    public global::System.Collections.Generic.IReadOnlyList<global::TUnit.Core.TestMetadata> GetTests(string testSessionId)
     {
         var metadata = new global::TUnit.Core.TestMetadata<global::TUnit.TestProject.ClassTupleDataSourceDrivenTests>
         {
@@ -349,7 +349,7 @@ internal sealed class TUnit_TestProject_ClassTupleDataSourceDrivenTests_DataSour
                     return classMetadata;
                 })
             },
-            InstanceFactory = (typeArgs, args) =>
+            InstanceFactory = static (typeArgs, args) =>
             {
                 return new global::TUnit.TestProject.ClassTupleDataSourceDrivenTests(global::TUnit.Core.Helpers.CastHelper.Cast<int>(args[0]), global::TUnit.Core.Helpers.CastHelper.Cast<string>(args[1]), global::TUnit.Core.Helpers.CastHelper.Cast<bool>(args[2]))
                 {
@@ -381,8 +381,7 @@ internal sealed class TUnit_TestProject_ClassTupleDataSourceDrivenTests_DataSour
             },
         };
         metadata.UseRuntimeDataGeneration(testSessionId);
-        yield return metadata;
-        yield break;
+        return new global::TUnit.Core.TestMetadata[] { metadata };
     }
     public global::System.Collections.Generic.IEnumerable<global::TUnit.Core.TestDescriptor> EnumerateTestDescriptors()
     {
@@ -399,7 +398,7 @@ internal sealed class TUnit_TestProject_ClassTupleDataSourceDrivenTests_DataSour
             HasDataSource = true,
             RepeatCount = 0,
             DependsOn = global::System.Array.Empty<string>(),
-            Materializer = GetTestsAsync
+            Materializer = GetTests
         };
     }
 }
