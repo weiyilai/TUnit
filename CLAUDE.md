@@ -52,6 +52,28 @@ git add *.verified.txt
 
 > "Does this make TUnit faster, more modern, more reliable, or more enjoyable to use?"
 
+## Branch & PR Workflow
+
+- Default: create a feature branch, open a PR, iterate via review feedback. Don't push code changes directly to `main`.
+- Exception — direct push to `main` is fine for trivial, low-risk changes that don't need review: doc tweaks (README, CLAUDE.md, `.claude/**`), agent-instruction updates, comment-only edits, typo fixes. Use judgment; if in doubt, branch + PR.
+- If the user says "push to main" while currently on `main`, confirm intent: do they mean "push my branch and merge", or "push the current branch which happens to be `main`"?
+
+## Worktree Cleanup
+
+- When asked to clean up worktrees, proceed with `git worktree remove` for `[gone]` or merged branches without asking for per-item confirmation; report what was done.
+- Preserve branches by default — only delete when explicitly asked.
+
+## PR Review Iteration
+
+- Verify each review finding against the code before applying a fix — don't blindly accept reviewer suggestions.
+- Run tests locally before pushing.
+- If you disagree with a review item, push back **once** with concrete reasoning. If the reviewer or user reaffirms, implement it instead of continuing to argue.
+- Before commit, check that related tests, snapshots, and downstream files in the same module were updated alongside the source change.
+
+## Output Limits
+
+- Keep individual responses under the 500-token output limit. For long results, split across turns or write to a file and reference it.
+
 ## Further Documentation
 
 - `.claude/docs/mandatory-rules.md` - Full rule details
