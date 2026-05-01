@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Text;
 using TUnit.Assertions.Core;
 using TUnit.Assertions.Should.Core;
 
@@ -9,7 +8,7 @@ namespace TUnit.Assertions.Should;
 /// Entry-point extensions for Should-style assertions. Mirrors
 /// <c>TUnit.Assertions.Assert.That(...)</c> as a fluent extension on the value.
 /// </summary>
-public static class ShouldExtensions
+public static partial class ShouldExtensions
 {
     /// <summary>
     /// Begins a Should-flavored assertion chain on the supplied value.
@@ -18,7 +17,7 @@ public static class ShouldExtensions
         this T? value,
         [CallerArgumentExpression(nameof(value))] string? expression = null)
     {
-        var sb = BuildExpression(expression);
+        var sb = ShouldExpressionBuilder.Build(expression);
         return new ShouldSource<T>(new AssertionContext<T>(value, sb));
     }
 
@@ -33,7 +32,7 @@ public static class ShouldExtensions
         this string? value,
         [CallerArgumentExpression(nameof(value))] string? expression = null)
     {
-        var sb = BuildExpression(expression);
+        var sb = ShouldExpressionBuilder.Build(expression);
         return new ShouldSource<string>(new AssertionContext<string>(value, sb));
     }
 
@@ -49,6 +48,70 @@ public static class ShouldExtensions
     [OverloadResolutionPriority(1)]
     public static ShouldCollectionSource<T> Should<T>(
         this IEnumerable<T>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+
+    [OverloadResolutionPriority(3)]
+    public static ShouldCollectionSource<T> Should<T>(
+        this ICollection<T>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+
+    [OverloadResolutionPriority(2)]
+    public static ShouldCollectionSource<T> Should<T>(
+        this IReadOnlyCollection<T>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+
+    [OverloadResolutionPriority(4)]
+    public static ShouldCollectionSource<T> Should<T>(
+        this IList<T>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+
+    [OverloadResolutionPriority(5)]
+    public static ShouldCollectionSource<T> Should<T>(
+        this T[]? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+
+    [OverloadResolutionPriority(3)]
+    public static ShouldCollectionSource<T> Should<T>(
+        this IReadOnlyList<T>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+
+    [OverloadResolutionPriority(2)]
+    public static ShouldDictionarySource<TKey, TValue> Should<TKey, TValue>(
+        this IReadOnlyDictionary<TKey, TValue>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        where TKey : notnull
+        => new(value, expression);
+
+    [OverloadResolutionPriority(3)]
+    public static ShouldMutableDictionarySource<TKey, TValue> Should<TKey, TValue>(
+        this IDictionary<TKey, TValue>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        where TKey : notnull
+        => new(value, expression);
+
+    [OverloadResolutionPriority(1)]
+    public static ShouldSetSource<T> Should<T>(
+        this ISet<T>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+
+#if NET5_0_OR_GREATER
+    [OverloadResolutionPriority(2)]
+    public static ShouldReadOnlySetSource<T> Should<T>(
+        this IReadOnlySet<T>? value,
+        [CallerArgumentExpression(nameof(value))] string? expression = null)
+        => new(value, expression);
+#endif
+
+    [OverloadResolutionPriority(3)]
+    public static ShouldHashSetSource<T> Should<T>(
+        this HashSet<T>? value,
         [CallerArgumentExpression(nameof(value))] string? expression = null)
         => new(value, expression);
 
@@ -77,6 +140,12 @@ public static class ShouldExtensions
             catch (Exception ex) { return Task.FromResult<(T?, Exception?)>((default, ex)); }
         });
 
+    [OverloadResolutionPriority(1)]
+    public static ShouldDelegateCollectionSource<T> Should<T>(
+        this Func<IEnumerable<T>?> func,
+        [CallerArgumentExpression(nameof(func))] string? expression = null)
+        => new(ShouldDelegateCollectionSource<T>.CreateContext(func, expression));
+
     /// <summary>
     /// Begins a Should-flavored assertion chain on an asynchronous action.
     /// </summary>
@@ -101,14 +170,13 @@ public static class ShouldExtensions
             catch (Exception ex) { return (default, ex); }
         });
 
+    [OverloadResolutionPriority(1)]
+    public static ShouldDelegateCollectionSource<T> Should<T>(
+        this Func<Task<IEnumerable<T>?>> func,
+        [CallerArgumentExpression(nameof(func))] string? expression = null)
+        => new(ShouldDelegateCollectionSource<T>.CreateContext(func, expression));
+
     private static ShouldDelegateSource<T> CreateDelegateSource<T>(
         string? expression, Func<Task<(T?, Exception?)>> evaluator)
-        => new(new AssertionContext<T>(new EvaluationContext<T>(evaluator), BuildExpression(expression)));
-
-    private static StringBuilder BuildExpression(string? expression)
-    {
-        var sb = new StringBuilder((expression?.Length ?? 1) + 16);
-        sb.Append(expression ?? "?").Append(".Should()");
-        return sb;
-    }
+        => new(new AssertionContext<T>(new EvaluationContext<T>(evaluator), ShouldExpressionBuilder.Build(expression)));
 }
