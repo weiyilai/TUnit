@@ -26,6 +26,7 @@ internal sealed class TestScheduler : ITestScheduler
     private readonly AfterHookPairTracker _afterHookPairTracker;
     private readonly StaticPropertyHandler _staticPropertyHandler;
     private readonly IDynamicTestQueue _dynamicTestQueue;
+    private readonly NotInParallelLock _notInParallelLock;
     private readonly Lazy<int> _maxParallelism;
 #if !NET
     private readonly Lazy<SemaphoreSlim> _maxParallelismSemaphore;
@@ -43,7 +44,8 @@ internal sealed class TestScheduler : ITestScheduler
         HookExecutor hookExecutor,
         AfterHookPairTracker afterHookPairTracker,
         StaticPropertyHandler staticPropertyHandler,
-        IDynamicTestQueue dynamicTestQueue)
+        IDynamicTestQueue dynamicTestQueue,
+        NotInParallelLock notInParallelLock)
     {
         _logger = logger;
         _groupingService = groupingService;
@@ -56,6 +58,7 @@ internal sealed class TestScheduler : ITestScheduler
         _afterHookPairTracker = afterHookPairTracker;
         _staticPropertyHandler = staticPropertyHandler;
         _dynamicTestQueue = dynamicTestQueue;
+        _notInParallelLock = notInParallelLock;
 
         _maxParallelism = new Lazy<int>(() => GetMaxParallelism(logger, commandLineOptions));
 
@@ -141,6 +144,11 @@ internal sealed class TestScheduler : ITestScheduler
         // Group tests by their parallel constraints
         var groupedTests = await _groupingService.GroupTestsByConstraintsAsync(executableTests).ConfigureAwait(false);
 
+        // Suites with no global [NotInParallel] tests skip the runtime exclusion
+        // lock entirely. Once enabled, the flag is monotonic — dynamic batches
+        // that introduce NIP later (see ExecuteDynamicBatchAsync) keep it on.
+        MarkGlobalNotInParallelTests(groupedTests);
+
         // Execute tests according to their grouping
         await ExecuteGroupedTestsAsync(groupedTests, cancellationToken).ConfigureAwait(false);
 
@@ -187,8 +195,9 @@ internal sealed class TestScheduler : ITestScheduler
         // only block other tests sharing a key (per docs/parallelism.md). Running them
         // sequentially makes a `[Test] T1` always run before `[Test, NotInParallel("k")] T2`
         // which is observable as "Test1 never overlaps Test2" (discussion #5700). Run them
-        // concurrently instead. ParallelGroups still serialize (cross-group exclusion) and
-        // global NotInParallel still drains last (must run alone).
+        // concurrently instead. ParallelGroups still serialize (cross-group exclusion).
+        // Global NotInParallel runs last in declared [NotInParallel(Order)] order; the
+        // "alone" semantic is enforced at runtime by NotInParallelLock, not by this phase.
         Task? parallelPhase = null;
         if (groupedTests.Parallel.Length > 0)
         {
@@ -308,7 +317,23 @@ internal sealed class TestScheduler : ITestScheduler
         // tests with [NotInParallel(key)], [ParallelGroup(...)] etc. honour their constraints
         // instead of being silently dropped.
         var groupedDynamicTests = await _groupingService.GroupTestsByConstraintsAsync(dynamicTests.ToArray()).ConfigureAwait(false);
+        MarkGlobalNotInParallelTests(groupedDynamicTests);
         await ExecuteAllPhasesAsync(groupedDynamicTests, cancellationToken).ConfigureAwait(false);
+    }
+
+    private void MarkGlobalNotInParallelTests(GroupedTests grouped)
+    {
+        if (grouped.NotInParallel.Length == 0)
+        {
+            return;
+        }
+
+        _notInParallelLock.Enable();
+
+        for (var i = 0; i < grouped.NotInParallel.Length; i++)
+        {
+            grouped.NotInParallel[i].RequiresGlobalNotInParallelLock = true;
+        }
     }
 
 #if NET
